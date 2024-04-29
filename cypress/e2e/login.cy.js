@@ -3,7 +3,7 @@ describe('Login', () => {
     cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
   })
 
-  it.only('Valid login by a valid user', () => {
+  it('Valid login by a valid user', () => {
     cy.fillLoginFields()
   })
 
