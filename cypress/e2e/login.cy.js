@@ -7,7 +7,7 @@ describe('Login', () => {
     cy.fillLoginFields()
   })
 
-  it('Valid login by a invalid user', () => {
+  it('Valid login by an invalid user', () => {
     cy.get("input[name='username']").type('invalid')
     cy.get("input[name='password']").type('admin123')
     cy.get('button[type=submit]').click()
