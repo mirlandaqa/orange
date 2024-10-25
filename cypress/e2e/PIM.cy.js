@@ -1,47 +1,91 @@
+import { baseUrl } from '../support/config';
+import { faker } from '@faker-js/faker';
+
 describe('Login', () => {
+
+    const selectors = {
+        firstNameInput: "input[name='firstName']",
+        midleNameInput: "input[name='middleName']",
+        lastNameInput: "input[name='lastName']",
+        toastSuccessMessage: ".oxd-toast--success",
+        employeeIdInput: ".oxd-grid-item > .oxd-input-group > :nth-child(2) > .oxd-input",
+        userNameInput: ":nth-child(4) > .oxd-grid-2 > :nth-child(1) > .oxd-input-group > :nth-child(2) > .oxd-input",
+        userLoginInput: "input[type='password']",
+        confirmPasswordInput: ".oxd-grid-2 > :nth-child(2) > .oxd-input-group > :nth-child(2) > .oxd-input",
+        submitButton: "button[type='submit']"
+    }
+
+    const generateRandomEmployeeId = () => Math.floor(1000 + Math.random() * 9000);
+
+    const fillEmployeeForm = (firstName, middleName, lastName, employeeId) => {
+        cy.get(selectors.firstNameInput).type(firstName);
+        cy.get(selectors.midleNameInput).type(middleName);
+        cy.get(selectors.lastNameInput).type(lastName);
+        cy.get(selectors.employeeIdInput).clear().type(employeeId);
+    }
+
+    function verifyErrorMessageAtIndex(index, fieldName) {
+        cy.get('.oxd-input-group.oxd-input-field-bottom-space')
+            .eq(index)
+            .within(() => {
+                cy.get(`input[name="${fieldName}"]`).should('exist'); // Verifica o campo pelo nome
+                cy.get('.oxd-input-field-error-message') // Busca a mensagem de erro
+                    .should('have.text', 'Required') // Verifica o texto da mensagem de erro
+                    .and('be.visible'); // Confirma que a mensagem está visível
+            });
+    }
+
     beforeEach(() => {
-        cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
+        cy.visit(baseUrl)
         cy.fillLoginFields()
         cy.openPIMmenu()
+
     })
 
-    it('Save new employee form without filling login details', () => {
-        cy.contains('Add').click()
-        cy.contains('Add Employee').should('be.visible')
-        cy.get("input[name='firstName']").type("Maria")
-        cy.get("input[name='middleName']").type("Joaquina")
-        cy.get("input[name='lastName']").type("Santos")
-        cy.get('.oxd-grid-item > .oxd-input-group > :nth-child(2) > .oxd-input').as('employeeId')
-        const campo = '@employeeId';
-        const novoValor = Math.floor(1000 + Math.random() * 9000);
-        cy.get(campo).clear().type(novoValor);
+    context('Add Employee tab', () => {
+        it('Should save new employee form without filling login details', () => {
+            const employeeIdRandom = generateRandomEmployeeId();
 
-        cy.contains('Save').click()
-        cy.get('.oxd-toast--success')
-            .should('be.visible')    
+            cy.contains('Add').click()
+            cy.contains('Add Employee').should('be.visible')
+            fillEmployeeForm('Maria', 'Joaquina', 'Santos', employeeIdRandom)
+
+            cy.contains('Save').click()
+            cy.get(selectors.toastSuccessMessage)
+                .should('be.visible')
+        })
+
+        it('Should save new employee form with login details', () => {
+            const employeeIdRandom = generateRandomEmployeeId();
+
+            cy.contains('Add').click()
+            cy.contains('Add Employee').should('be.visible')
+            fillEmployeeForm('Maria', 'Joaquina', 'Santos', employeeIdRandom)
+
+            cy.get('.oxd-switch-input').click()
+            cy.get(selectors.userNameInput).type(faker.person.firstName())
+            cy.get(selectors.userLoginInput).first().type('senha@123')
+            cy.get(selectors.confirmPasswordInput).type('senha@123')
+            cy.contains('Save').click()
+            cy.get(selectors.toastSuccessMessage)
+                .should('be.visible')
+        })
+
+        it.only('Should prevent saving an employee when required fields are missing', () => {
+            cy.contains('a', 'Add Employee').click();
+            cy.get(selectors.submitButton).click();
+
+            verifyErrorMessageAtIndex(1, 'firstName');
+            verifyErrorMessageAtIndex(3, 'lastName');
+        })
     })
 
-    it.only('Save new employee form with login details', () => {
-        cy.contains('Add').click()
-        cy.contains('Add Employee').should('be.visible')
-        cy.get("input[name='firstName']").type("Maria")
-        cy.get("input[name='middleName']").type("Joaquina")
-        cy.get("input[name='lastName']").type("Santos")
-        cy.get('.oxd-grid-item > .oxd-input-group > :nth-child(2) > .oxd-input').as('employeeId')
-        const campo = '@employeeId';
-        const novoValor = Math.floor(1000 + Math.random() * 9000);
-        cy.get(campo).clear().type(novoValor);
+    context('Configuration tab', () => {
+    })
 
-        cy.get('.oxd-switch-input').click()
-        cy.wait(1000)
-        cy.get(':nth-child(4) > .oxd-grid-2 > :nth-child(1) > .oxd-input-group > :nth-child(2) > .oxd-input')
-            .as('campoUsername')
-        cy.get('@campoUsername').type('mama_s')
-        cy.get("input[type='password']").first().type('senha@123')
-        cy.get(".oxd-grid-2 > :nth-child(2) > .oxd-input-group > :nth-child(2) > .oxd-input").as('campoConfirmaSenha')
-        cy.get('@campoConfirmaSenha').type('senha@123')
-        cy.contains('Save').click()
-        cy.get('.oxd-toast--success')
-            .should('be.visible')
+    context('Employee List tab', () => {
+    })
+
+    context('Reports tab', () => {
     })
 })

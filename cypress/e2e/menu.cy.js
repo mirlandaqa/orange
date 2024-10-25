@@ -1,34 +1,68 @@
-describe('Login', () => {
+import { baseUrl } from '../support/config';
+
+
+describe('Menu ', () => {
+    const selectors = {
+        searchInput: "input[placeholder='Search']",
+        activeMenu: '.active',
+        sidePanelBody: '.oxd-sidepanel-body',
+        menuItems: 'a span'
+    }
+
+    const expectedMenus = [
+        'Admin',
+        'PIM',
+        'Leave',
+        'Time',
+        'Recruitment',
+        'My Info',
+        'Performance',
+        'Dashboard',
+        'Directory',
+        'Maintenance',
+        'Claim',
+        'Buzz'
+    ]
+
+    const checkActiveMenu = (menuName) => {
+        cy.get(selectors.activeMenu)
+            .should('contain.text', menuName);
+    }
+
     beforeEach(() => {
-        cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
+        cy.visit(baseUrl)
         cy.fillLoginFields()
     })
 
-    it('Valid the Dashboard menu is selected after logging', () => {
-        cy.get('.active')
-            .contains('Dashboard')
-            .should('have.text', 'Dashboard')
+    it('Should show the correct menu options', () => {
+        cy.get(selectors.menuItems).each((menuItem, index) => {
+            cy.wrap(menuItem).should('have.text', expectedMenus[index]);
+        });
     })
-    
-    it('Valid searching by menu', () => {
-        cy.get("input[placeholder='Search']")
-            .type('Leave')
-        
-        cy.get('a span')
-            .should('have.text', 'Leave')
+
+    it('Validates that the Dashboard menu is selected after logging in', () => {
+        checkActiveMenu('Dashboard');
 
     })
 
-    it('Valid that nothing is returned after searching for an invalid menu', () => {
-        cy.get("input[placeholder='Search']").type('ssshht')
-        cy.get('.oxd-sidepanel-body').should('have.text', '')
+    it('Validates searching for a menu by name', () => {
+        const menuName = 'Leave';
+        cy.get(selectors.searchInput)
+            .type(menuName);
+
+        cy.get(selectors.menuItems)
+            .should('contain.text', menuName);
+    })
+
+    it('Validates that no menu is returned for an invalid search', () => {
+        cy.get(selectors.searchInput).type('ssshht');
+        cy.get(selectors.sidePanelBody)
+            .should('not.contain.text');
     })
 
     it('Valid that another menu is opened when it is clicked', () => {
-        cy.contains('Admin').click()
-
-        cy.get('.active')
-            .contains('Admin')
-            .should('have.text', 'Admin')
+        const menuName = 'Admin';
+        cy.contains(menuName).click();
+        checkActiveMenu(menuName);
     })
 })
