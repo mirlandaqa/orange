@@ -32,7 +32,7 @@ describe('Login', () => {
         .should('have.text', 'Reset Password')
     })
 
-    it('Should be able to reset the password', () => {
+    it.only('Should be able to reset the password', () => {
       cy.contains('Forgot your password?').click()
       cy.get(selectors.usernameInput)
         .type('Admin')

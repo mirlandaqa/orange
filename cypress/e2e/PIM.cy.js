@@ -24,14 +24,14 @@ describe('Login', () => {
         cy.get(selectors.employeeIdInput).clear().type(employeeId);
     }
 
-    function verifyErrorMessageAtIndex(index, fieldName) {
+    function verifyErrorMessageAtCorrectField(index, fieldName) {
         cy.get('.oxd-input-group.oxd-input-field-bottom-space')
             .eq(index)
             .within(() => {
-                cy.get(`input[name="${fieldName}"]`).should('exist'); // Verifica o campo pelo nome
-                cy.get('.oxd-input-field-error-message') // Busca a mensagem de erro
-                    .should('have.text', 'Required') // Verifica o texto da mensagem de erro
-                    .and('be.visible'); // Confirma que a mensagem está visível
+                cy.get(`input[name="${fieldName}"]`).should('exist'); 
+                cy.get('.oxd-input-field-error-message')
+                    .should('have.text', 'Required') 
+                    .and('be.visible'); 
             });
     }
 
@@ -75,8 +75,8 @@ describe('Login', () => {
             cy.contains('a', 'Add Employee').click();
             cy.get(selectors.submitButton).click();
 
-            verifyErrorMessageAtIndex(1, 'firstName');
-            verifyErrorMessageAtIndex(3, 'lastName');
+            verifyErrorMessageAtCorrectField(1, 'firstName');
+            verifyErrorMessageAtCorrectField(3, 'lastName');
         })
     })
 
