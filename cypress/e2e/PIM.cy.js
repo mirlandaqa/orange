@@ -1,5 +1,5 @@
 import { baseUrl } from '../support/config';
-//import { faker } from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 
 describe('Login', () => {
 
@@ -63,7 +63,7 @@ describe('Login', () => {
             fillEmployeeForm('Maria', 'Joaquina', 'Santos', employeeIdRandom)
 
             cy.get('.oxd-switch-input').click()
-            cy.get(selectors.userNameInput).type('js')
+            cy.get(selectors.userNameInput).type(faker.name.findName())
             cy.get(selectors.userLoginInput).first().type('senha@123')
             cy.get(selectors.confirmPasswordInput).type('senha@123')
             cy.contains('Save').click()
@@ -80,12 +80,12 @@ describe('Login', () => {
         })
     })
 
-    context('Configuration tab', () => {
+  /* context('Configuration tab', () => {
     })
 
     context('Employee List tab', () => {
     })
 
     context('Reports tab', () => {
-    })
+    }) */
 })
