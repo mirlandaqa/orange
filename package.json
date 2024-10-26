@@ -2,22 +2,25 @@
   "name": "orange",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "cypress.config.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "e2e": "cypress run --env allure=true",
-    "report:allure": "allure generate allure-results --clean -o allure-report && allure open  allure-report",
-    "test:allure": "npm run e2e && npm run report:allure"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mirlandaqa/orange.git"
+  },
+  "author": "Mirlanda Costa",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mirlandaqa/orange/issues"
+  },
+  "homepage": "https://github.com/mirlandaqa/orange#readme",
   "dependencies": {
     "@faker-js/faker": "^9.0.3",
-    "cypress": "^13.8.0"
+    "cypress": "^12.5.1"
   },
   "devDependencies": {
-    "@shelex/cypress-allure-plugin": "^2.40.2",
-    "allure-commandline": "^2.29.0"
+    "@shelex/cypress-allure-plugin": "^2.40.2"
   }
 }

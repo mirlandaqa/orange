@@ -1,5 +1,5 @@
 import { baseUrl } from '../support/config';
-import { faker } from '@faker-js/faker';
+//import { faker } from '@faker-js/faker';
 
 describe('Login', () => {
 
@@ -28,10 +28,10 @@ describe('Login', () => {
         cy.get('.oxd-input-group.oxd-input-field-bottom-space')
             .eq(index)
             .within(() => {
-                cy.get(`input[name="${fieldName}"]`).should('exist'); 
+                cy.get(`input[name="${fieldName}"]`).should('exist');
                 cy.get('.oxd-input-field-error-message')
-                    .should('have.text', 'Required') 
-                    .and('be.visible'); 
+                    .should('have.text', 'Required')
+                    .and('be.visible');
             });
     }
 
@@ -63,7 +63,7 @@ describe('Login', () => {
             fillEmployeeForm('Maria', 'Joaquina', 'Santos', employeeIdRandom)
 
             cy.get('.oxd-switch-input').click()
-            cy.get(selectors.userNameInput).type(faker.person.firstName())
+            cy.get(selectors.userNameInput).type('js')
             cy.get(selectors.userLoginInput).first().type('senha@123')
             cy.get(selectors.confirmPasswordInput).type('senha@123')
             cy.contains('Save').click()
@@ -71,7 +71,7 @@ describe('Login', () => {
                 .should('be.visible')
         })
 
-        it.only('Should prevent saving an employee when required fields are missing', () => {
+        it('Should prevent saving an employee when required fields are missing', () => {
             cy.contains('a', 'Add Employee').click();
             cy.get(selectors.submitButton).click();
 
