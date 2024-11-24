@@ -43,16 +43,21 @@ describe('Login', () => {
     })
 
     context('Add Employee tab', () => {
-        it('Should save new employee form without filling login details', () => {
+        it.only('Should save new employee form without filling login details', () => {
             const employeeIdRandom = generateRandomEmployeeId();
 
             cy.contains('Add').click()
             cy.contains('Add Employee').should('be.visible')
-            fillEmployeeForm('Maria', 'Joaquina', 'Santos', employeeIdRandom)
+            cy.fixture('employee').then((employee) => {
+                fillEmployeeForm(
+                    employee.firstName,
+                    employee.middleName,
+                    employee.lastName,
+                    employeeIdRandom)
 
+            })
             cy.contains('Save').click()
-            cy.get(selectors.toastSuccessMessage)
-                .should('be.visible')
+            cy.get(selectors.toastSuccessMessage).should('be.visible')
         })
 
         it('Should save new employee form with login details', () => {
@@ -80,12 +85,12 @@ describe('Login', () => {
         })
     })
 
-  /* context('Configuration tab', () => {
-    })
-
-    context('Employee List tab', () => {
-    })
-
-    context('Reports tab', () => {
-    }) */
+    /* context('Configuration tab', () => {
+      })
+  
+      context('Employee List tab', () => {
+      })
+  
+      context('Reports tab', () => {
+      }) */
 })
