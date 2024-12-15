@@ -43,7 +43,7 @@ describe('Login', () => {
     })
 
     context('Add Employee tab', () => {
-        it.only('Should save new employee form without filling login details', () => {
+        it('Should save new employee form without filling login details', () => {
             const employeeIdRandom = generateRandomEmployeeId();
 
             cy.contains('Add').click()
@@ -85,12 +85,25 @@ describe('Login', () => {
         })
     })
 
-    /* context('Configuration tab', () => {
-      })
-  
-      context('Employee List tab', () => {
-      })
-  
-      context('Reports tab', () => {
-      }) */
+    context('Configuration tab', () => {
+
+        it.only('Should to update the options and save it', () => {
+            cy.contains('Configuration').click()
+            cy.contains('Optional Fields').click()
+
+            cy.get('span.oxd-switch-input.oxd-switch-input--active').each(($toggle) => {
+                cy.wrap($toggle).should('be.visible').click();
+            });
+
+            cy.contains('Save').click()
+            cy.get('div.oxd-toast').should('be.visible');
+
+        })
+    })
+
+    context('Employee List tab', () => {
+    })
+
+    context('Reports tab', () => {
+    })
 })
